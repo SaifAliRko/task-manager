@@ -1,0 +1,56 @@
+<div class="row marketing justify-content-center" style="margin-top: -12px;">
+  <div class="col-lg-8">
+    <h2 class="page-header" style="text-align: center;">Add Task</h2>
+
+    <br>
+    <form id="add_task" method="POST" action="/users/saveTask">
+      <div class="myKindaForm">
+        <div class="form-group">
+          <label for="task_name" class="font-weight-bold">Task</label>
+          <input type="text" name="task_name" id="task_name" class="form-control" placeholder="Task Name" autofocus required/>
+        </div>
+
+        <div class="form-group">
+          <label for="description" class="font-weight-bold">Description</label>
+          <textarea rows="4" cols="50" name="description" id="description" class="form-control" placeholder="Description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="category" class="font-weight-bold">Category</label>
+          <select type="text" name="category" id="category" class="form-control">
+            {{#each categories}}
+              <option value="{{category_name}}">{{category_name}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="due_date" class="font-weight-bold">Due Date</label>
+          <input type="date" name="due_date" id="due_date" class="form-control" placeholder="" required/>
+        </div>
+
+        <div class="form-group">
+          <label for="is_urgent" class="font-weight-bold">Urgent</label>
+          <select type="text" name="is_urgent" id="is_urgent" class="form-control">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="is_done" class="font-weight-bold">Done?</label>
+          <select type="text" name="is_done" id="is_done" class="form-control">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary add-task-btn" onclick="checkAddTaskFormValidity();">Submit</button>
+      <button type="" class="btn btn-secondary" onclick="window.location.href='/users'; showSpinner(); return false;">Cancel</button>
+
+    </form>
+
+  </div>
+
+</div>

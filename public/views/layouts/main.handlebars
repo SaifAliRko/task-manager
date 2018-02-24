@@ -1,0 +1,114 @@
+<!DOCTYPE>
+<html>
+  <head lang="en">
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../css/jm.spinner.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- include Jquery -->
+    <script
+    src="http://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+    <!-- include bootstrap css -->
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+
+    <!-- include moment.js to work fine with dates -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+
+    <!-- include velocity.js for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.1/velocity.min.js"></script>
+  </head>
+
+  <body>
+    <div id="spinner"></div>
+
+    <!-- delete confirmation Modal starts -->
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Task</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body forTask">
+            Are you sure you want to delete the Task?
+          </div>
+          <div class="modal-body forCategory">
+            Are you sure you want to delete the Category?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-primary btn-danger sure-del-task forTask" data-taskid="">Yes</button>
+            <button type="button" class="btn btn-primary btn-danger sure-del-category forCategory" data-categoryid="">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- delete confirmation Modal ends-->
+
+    <!-- Container Starts -->
+    <div class="container">
+      <div class="header clearfix">
+        <h3 class="text-muted otherTM" style="display: none;">Task Manager</h3>
+        <nav>
+          <ul class="nav nav-pills float-right" style="font-size: 20px;">
+            <li class="nav-item">
+              {{#if isActiveNavLink_Tasks}}
+                <a class="nav-link active" href="/users" onclick="if(window.location.pathname != $(this).attr('href')) {showSpinner(); return true;} else{return;}">Tasks <span class="sr-only">(current)</span></a>
+              {{else}}
+                <a class="nav-link" href="/users" onclick="if(window.location.pathname != $(this).attr('href')) {showSpinner(); return true;} else{return;}">Tasks</a>
+              {{/if}}
+            </li>
+            <li class="nav-item">
+              {{#if isActiveNavLink_AddTask}}
+                <a class="nav-link active" href="/users/addTask" onclick="if(window.location.pathname != $(this).attr('href')) {showSpinner(); return true;} else{return;}">Add Task <span class="sr-only">(current)</span></a>
+              {{else}}
+                <a class="nav-link" href="/users/addTask" onclick="if(window.location.pathname != $(this).attr('href')) {showSpinner(); return true;} else{return;}">Add Task</a>
+              {{/if}}
+            </li>
+            <li class="nav-item">
+              {{#if isActiveNavLink_ManageCategories}}
+                <a class="nav-link active" href="/users/categories" onclick="if(window.location.pathname != $(this).attr('href')) {showSpinner(); return true;} else{return;}">Manage Categories <span class="sr-only">(current)</span></a>
+              {{else}}
+                <a class="nav-link" href="/users/categories" onclick="if(window.location.pathname != $(this).attr('href')) {showSpinner(); return true;} else{return;}">Manage Categories</a>
+              {{/if}}
+            </li>
+
+            <!-- Logout nav link starts -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" style="font-weight: bold; font-style: italic;">
+                Welcome, {{user.firstName}}
+              </a>
+              <div class="dropdown-menu myProfileDropdown" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="/users/changePasswordPage"
+                onclick="showSpinner(); return true;">Change Password</a>
+                <a class="dropdown-item" href="/logout"  onclick="showSpinner(); return true;">Logout</a>
+              </div>
+            </li>
+            <!-- Logout nav link ends -->
+          </ul>
+        </nav>
+        <h3 class="text-muted TM">Task Manager</h3>
+      </div>
+
+      {{{body}}}
+
+      <footer class="footer text-center">
+        <p>&copy; Made With &hearts; by stillNovice</p>
+      </footer>
+
+    </div>
+    <!-- Container Ends -->
+
+  </body>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="../../js/main.js"></script>
+  <script type="text/javascript" src="../../js/jm.spinner.js"></script>
+</html>

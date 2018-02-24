@@ -1,0 +1,39 @@
+<div class="row marketing justify-content-center" style="margin-top: -12px;">
+  <div class="col-lg-8">
+
+    <!-- Bootstrap Alert -->
+    {{#if flashMsgObj}}
+        {{#if flashMsgObj.success}}
+          <div class="alert alert-success alert-dismissible fade show myAlert" role="alert">
+          <span>{{flashMsgObj.success}}</span>
+        {{/if}}
+        {{#if flashMsgObj.error}}
+          <div class="alert alert-danger alert-dismissible fade show myAlert" role="alert">
+          <span>{{flashMsgObj.error}}</span>
+        {{/if}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {{/if}}
+
+    <div>
+      <h2 class="page-header" style="display: inline">Categories</h2>
+      <span class="float-right" style="margin-top: 10px; padding-right: 8px;"><a href="/users/addCategory" style="font-size: 20px">Add Categories</a></span>
+    </div>
+    <br>
+    {{#if categories}}
+    <ul class="list-group">
+      {{#each categories}}
+        <li class="list-group-item">
+          {{category_name}}
+          <span class="float-right"><a class="btn btn-primary edit-category-btn" href="/users/editcategory?id={{_id}}" onclick="showSpinner(); return true;" data-categoryid="{{_id}}" data-toggle="tooltip" title="Edit this Category"><i
+          class="material-icons">mode_edit</i></a> <a class="btn btn-danger del-category-btn" href="#" data-categoryid="{{_id}}" data-toggle="tooltip" title="Delete this Category"><i  class="material-icons">delete</i></a></span>
+        </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="font-weight-bold text-center" style="font-size: 20px;">No Categories to show!!!</p>
+    {{/if}}
+  </div>
+</div>

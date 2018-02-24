@@ -1,0 +1,19 @@
+<div class="row marketing justify-content-center" style="margin-top: -12px;">
+  <div class="col-lg-8">
+    <h2 class="page-header">Edit Category</h2>
+
+    <br>
+    <form id="edit_category" method="POST" action="/users/saveEditedCategory?id={{category._id}}">
+      <div class="form-group">
+        <label for="category_name" class="font-weight-bold">Category</label>
+        <input type="text" name="category_name" id="category_name" class="form-control" placeholder="Category Name" value="{{category.category_name}}" autofocus required onfocus="$(this)[0].setSelectionRange($(this).val().length, $(this).val().length);"/>
+      </div>
+
+      <button type="submit" class="btn btn-primary" onclick="if($('#category_name')[0].validity.valid) {showSpinner(); return true;} return false;">Save</button>
+      <button type="submit" class="btn btn-secondary" onclick="window.location.href='/users/categories'; showSpinner(); return false;">Cancel</button>
+
+    </form>
+
+  </div>
+
+</div>

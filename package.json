@@ -1,0 +1,37 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "A simple task manager. Made with Love.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app"
+  },
+  "author": "stillNovice",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "express-handlebars": "^3.0.0",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.15.6",
+    "express-validator": "^4.3.0",
+    "moment": "^2.20.1",
+    "mongoose": "^4.13.6",
+    "nodemailer": "^4.4.2",
+    "nodemailer-express-handlebars": "^3.0.0",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "nodemon": "^1.12.5",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "rand-token": "^0.4.0",
+    "serve-favicon": "^2.4.5",
+    "xoauth2": "^1.2.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.0"
+  }
+}

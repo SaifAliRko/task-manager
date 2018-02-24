@@ -1,0 +1,19 @@
+<div class="row marketing justify-content-center">
+  <div class="col-lg-8">
+    <h2 class="page-header">Add Categories</h2>
+
+    <br>
+    <form id="add_category" method="POST" action="/users/addThisCategory">
+      <div class="form-group">
+        <label for="category_name" class="font-weight-bold">Category</label>
+        <input type="text" name="category_name" id="category_name" class="form-control" placeholder="Category Name" required autofocus/>
+      </div>
+
+      <button type="submit" class="btn btn-primary add-category-btn" onclick="if($('#category_name')[0].validity.valid) {showSpinner(); return true;}">Submit</button>
+      <button type="submit" class="btn btn-secondary" onclick="window.location.href='/users/categories'; return false;">Cancel</button>
+
+    </form>
+
+  </div>
+
+</div>

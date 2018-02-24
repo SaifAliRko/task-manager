@@ -1,0 +1,136 @@
+<!DOCTYPE>
+<html>
+  <head lang="en">
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <link rel="stylesheet" href="./css/signin.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" type="text/css" href="./css/jm.spinner.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!-- added moment.js to work fine with dates -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+
+    <!-- added jQuery to make life easy -->
+    <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+
+    <!-- include velocity.js for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.1/velocity.min.js"></script>
+
+    <style>
+      .card-body {
+        box-shadow: 4px 3px 11px 2px #b80ca9;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div id="spinner"></div>
+
+    <div class="container">
+      <!-- auth fails message div -->
+      <div id="authFailsDiv" class="row"></div>
+
+      <!-- Success/Failure Toast starts -->
+      <div class="row " style="margin-bottom: 10px;">
+        <div class="alert alert-dismissible fade show myAlert col-8" role="alert" style="display: none;">
+          <span style="overflow-wrap: break-word;"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; top: 0px; margin-right: 10px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <!-- Success/Failure Toast ends -->
+
+      <!-- Login Card starts -->
+      <div class="card mx-auto text-center card-container signin" style="width: 25rem;">
+        <div class="card-body">
+
+          <img class="rounded mx-auto d-block" style="height: 150px; width: 150px; margin-top: 10px;" src="https://cdn1.iconfinder.com/data/icons/mix-color-4/502/Untitled-1-512.png" alt="Card image cap">
+
+          <form class="form-signin registered-user" method="POST" action="/login">
+            <input type="email" class="form-control" name="username" id="username" placeholder="Email" onfocus="onfocusAction('username'); return false;" required autofocus>
+            <span id="username_err" class="errMsgSpan float-left" style="display: none;">*Enter valid email</span>
+
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password" required onfocus="onfocusAction('password'); return false;">
+            <span id="password_err" class="errMsgSpan float-left" style="display: none;">*Enter valid values</span>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="btn-signIn" onclick="return validateSignIn();">Sign in</button>
+            <br>
+            <button class="btn btn-link float-left" id="btn-forgotPassword" onclick="return false;">Forgot Password?</button>
+            <button class="btn btn-link float-right" id="btn-registerNew" onclick="return false;">Register New</button>
+
+          </form>
+
+        </div>
+      </div>
+      <!-- Login Card Ends -->
+      
+      <!-- Sign Up Card Starts -->
+      <div class="card mx-auto text-center card-container signup" style="width: 25rem; display: none;">
+        <div class="card-body">
+
+          <img class="rounded mx-auto d-block" style="height: 150px; width: 150px; margin-top: 10px;" src="https://cdn1.iconfinder.com/data/icons/mix-color-4/502/Untitled-1-512.png" alt="Card image cap">
+
+          <form class="form-signin new-user">
+            <input type="text" class="form-control" name="newuser_firstName" id="newuser_firstName" placeholder="First Name" onfocus="onfocusAction('newuser_firstName'); return false;" required>
+            <span id="newuser_firstName_err" class="errMsgSpan float-left"></span>
+
+            <input type="text" class="form-control" name="newuser_lastName" id="newuser_lastName" placeholder="Last Name" required onfocus="onfocusAction('newuser_lastName'); return false;">
+            <span id="newuser_lastName_err" class="errMsgSpan float-left"></span>
+
+            <input type="email" class="form-control" name="newuser_email" id="newuser_email" placeholder="Email" required onfocus="onfocusAction('newuser_email'); return false;">
+            <span id="newuser_email_err" class="errMsgSpan float-left"></span>
+
+            <input type="password" class="form-control" name="newuser_password" id="newuser_password" placeholder="Password" required onfocus="onfocusAction('newuser_password'); return false;">
+            <span id="newuser_password_err" class="errMsgSpan float-left"></span>
+
+            <input type="password" class="form-control" name="newuser_confirm_password" id="newuser_confirm_password" placeholder="Confirm Password" style="margin-bottom: 10px;" required onfocus="onfocusAction('newuser_confirm_password'); return false;">
+            <span id="newuser_confirm_password_err" class="errMsgSpan float-left" style="margin-top: -12px;"></span>
+
+
+            <button class="btn btn-lg btn-primary btn-block" id="btn-signUp">Sign up</button>
+            <br>
+            <button class="btn btn-link" id="btn-registered">Already a user?</button>
+
+          </form>
+
+        </div>
+      </div>
+      <!-- Sign Up Card Ends -->
+
+    </div>
+
+  </body>
+
+  <script>
+    var $registerNew = $('#btn-registerNew');
+    var $registered = $('#btn-registered');
+    $registerNew.click(function() {
+      $('.signin').hide();
+      $('.container').removeClass('transformBack');
+      $('.signup').show();
+      $('.container').addClass('transform');
+      $('.card').addClass('transform');
+      $('#newuser_firstName').focus();
+      $('.myAlert').addClass('transform');
+    });
+
+    $registered.click(function() {
+      $('.container').removeClass('transform');
+      $('.signup').hide();
+      $('.signin').show();
+      $('.container').addClass('transformBack');
+    });
+  </script>
+
+  <!--<script src="./js/main2.js"></script>-->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="./js/loginUtil.js"></script>
+  <script type="text/javascript" src="../../js/jm.spinner.js"></script>
+</html>

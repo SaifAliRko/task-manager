@@ -1,0 +1,127 @@
+<div class="row marketing" style="margin-top: -12px;">
+  <div class="col-lg-12">
+
+    <!-- Bootstrap Alert -->
+    {{#if flashMsgObj}}
+        {{#if flashMsgObj.success}}
+          <div class="alert alert-success alert-dismissible fade show myAlert" role="alert">
+          <span>{{flashMsgObj.success}}</span>
+        {{/if}}
+        {{#if flashMsgObj.error}}
+          <div class="alert alert-danger alert-dismissible fade show myAlert" role="alert">
+          <span>{{flashMsgObj.error}}</span>
+        {{/if}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {{/if}}
+
+    {{#if hasTasks}}
+      <div class="row">
+        <div class="col-6" style="">
+          <h2 class="page-header" style="text-align: center; box-shadow: 0px 5px 16px -9px gray;padding-bottom: 6px;">Active Tasks</h2>
+          <br>
+
+          {{#if dateWiseTasks}}
+            {{#each dateWiseTasks}}
+              <div style="width: 97%; background: #965c2b; margin-bottom: 2px; border-radius: 5px; color: white"><i class="material-icons" style="margin-top: 2px; margin-left: 2px;">date_range</i><span style="vertical-align: top; font-size: 20px; margin-left: 5px;">{{date}}</span></div>
+              <div id="{{millisecondValue}}">
+                <ul class="list-group">
+                  {{#each tasks}}
+                    <div class="card" style="width: 97%; margin-bottom: 5px;">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-10">
+                            <h5 class="card-title">{{this.task_name}}</h5>
+                          </div>
+                          <div class="col-2">
+                            {{#if this.is_urgent}}
+                              <span class="badge badge-danger badge-pill float-right" style="margin-left: 5px">Urgent</span>
+                            {{/if}}
+                          </div>
+                        </div>
+                        {{#if this.description}}
+                         <p class="card-text"><span style="font-weight: 500; color: #965c2b;">Description</span>: {{this.description}}</p>
+                        {{/if}}
+                        <div class="row">
+                          <div class="col">
+                            <p class="card-text float-left" style="font-weight: 500;"><span style="color: #965c2b; line-height: 40px;">Created On</span>: {{this.createdDate_toShow}}</p>
+                          </div>
+                          <div class="col">
+                            <span class="float-right">
+                              <a class="btn btn-success setDone-task-btn" href="/users/setTaskDone?taskid={{this._id}}" onclick="showSpinner(); return true;" data-taskid="{{this._id}}" data-toggle="tooltip" title="Mark Task Done!">
+                              <i class="material-icons">assignment_turned_in</i>
+                              </a> 
+                              <a class="btn btn-primary edit-task-btn" href="/users/editTask?taskid={{this._id}}" onclick="showSpinner(); return true;" data-taskid="{{this._id}}" data-toggle="tooltip" title="Edit this Task">
+                                <i class="material-icons">mode_edit</i>
+                              </a> 
+                              <a class="btn btn-danger del-task-btn" href="#" data-taskid="{{this._id}}" data-toggle="tooltip" title="Delete this Task">
+                                <i class="material-icons">delete</i>
+                              </a>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {{/each}}
+                <br>
+              </div>
+            {{/each}}
+          
+          {{else}}
+            <p class="font-weight-bold text-center" style="font-size: 20px;">No Active Tasks Yet!!!</p>
+          {{/if}}
+        </div>
+
+        <div class="col-6">
+          <h2 class="page-header" style="text-align: center; box-shadow: 0px 5px 16px -9px gray; padding-bottom: 6px;">Done Tasks</h2>
+          <br>
+          
+          {{#if dateWiseTasks_done}}
+            {{#each dateWiseTasks_done}}
+              <div style="width: 97%; background: #727b84; margin-bottom: 2px; border-radius: 5px; color: white"><i class="material-icons" style="margin-top: 2px; margin-left: 2px;">date_range</i><span style="vertical-align: top; font-size: 20px; margin-left: 5px;">{{date}}</span></div>
+              <div id="{{millisecondValue}}">
+                <ul class="list-group">
+                  {{#each tasks}}
+                    <div class="card" style="width: 97%; margin-bottom: 5px;">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col">
+                            <h6 class="card-title">{{this.task_name}}</h6>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <p class="card-text float-left" style="font-weight: 500;"><span style="color: #965c2b; line-height: 40px;">Done On</span>: {{this.doneDate_toShow}}</p>
+                          </div>
+                          <div class="col">
+                            <span class="float-right">
+                              <a class="btn btn-secondary setActive-task-btn" href="/users/setTaskActive?taskid={{this._id}}" onclick="showSpinner(); return true;" data-taskid="{{this._id}}" data-toggle="tooltip" title="Mark Task Active Again!">
+                                <i class="material-icons">assignment_return</i>
+                              </a> 
+                              <a class="btn btn-danger del-task-btn" href="#" data-taskid="{{this._id}}" data-toggle="tooltip" title="Delete this Task">
+                                <i class="material-icons">delete</i>
+                              </a>
+                            </span>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  {{/each}}
+                <br>
+              </div>
+            {{/each}}
+
+          {{else}}
+            <p class="font-weight-bold text-center" style="font-size: 20px;">No Done Tasks Yet!!!</p>
+          {{/if}}
+
+        </div>
+      </div>
+    {{else}}
+      <p class="font-weight-bold text-center" style="font-size: 20px;">No Tasks Yet!!!</p>
+    {{/if}}
+  </div>
+</div>

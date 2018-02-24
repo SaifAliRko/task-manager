@@ -1,0 +1,60 @@
+<div class="row marketing justify-content-center">
+  <div class="col-lg-8">
+    <h2 class="page-header" style="text-align: center;">Edit Task</h2>
+
+    <br>
+    <form id="edit_task" method="POST" action="/users/saveEditedTask?taskid={{task._id}}">
+      <div class="myKindaForm">
+        <div class="form-group">
+          <label for="task_name" class="font-weight-bold">Task</label>
+          <input type="text" name="task_name" id="task_name" class="form-control" placeholder="Task Name" value="{{task.task_name}}" required autofocus onfocus="$(this)[0].setSelectionRange($(this).val().length, $(this).val().length);"/>
+        </div>
+
+        <div class="form-group">
+          <label for="description" class="font-weight-bold">Description</label>
+          <textarea rows="4" cols="50" name="description" id="description" class="form-control" placeholder="Description" autofocus onfocus="$(this)[0].setSelectionRange($(this).val().length, $(this).val().length);">{{task.description}}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="category" class="font-weight-bold">Category</label>
+          <select type="text" name="category" id="category" class="form-control" value="{{task.category}}" required>
+            {{#each categories}}
+              {{#if is_selected}}
+                <option value="{{category_name}}" selected="selected">{{category_name}}</option>
+              {{else}}
+                <option value="{{category_name}}">{{category_name}}</option>
+              {{/if}}
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="due_date" class="font-weight-bold">Due Date</label>
+          <input type="date" name="due_date" id="due_date" class="form-control" placeholder="" value="{{task.due_date_toShow}}" required/>
+        </div>
+
+        <div class="form-group">
+          <label for="is_urgent" class="font-weight-bold">Urgent</label>
+          <select type="text" name="is_urgent" id="is_urgent" class="form-control">
+            <option value="false" {{#task.is_urgent}} selected="selected" {{/task.is_urgent}}>No</option>
+            <option value="true" {{#task.is_urgent}} selected="selected" {{/task.is_urgent}}>Yes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="is_done" class="font-weight-bold">Done?</label>
+          <select type="text" name="is_done" id="is_done" class="form-control">
+            <option value="false" {{#task.is_done}} selected="selected" {{/task.is_done}}>No</option>
+            <option value="true" {{#task.is_done}} selected="selected" {{/task.is_done}}>Yes</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary edit-this-task-btn" onclick="checkAddTaskFormValidity();">Save</button>
+      <button type="submit" class="btn btn-secondary" onclick="window.location.href='/users'; showSpinner(); return false;">Cancel</button>
+
+    </form>
+
+  </div>
+
+</div>
