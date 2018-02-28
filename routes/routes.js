@@ -7,7 +7,22 @@ var User = require('../models/users');
 var mailObj = require('../mailUtil');
 
 router.get('/', function(req, res, next) {
-  res.sendFile(path.join(__dirname, '../public/login.html'));
+  // if the user is logged in, take him to '/users' route, else open login page.
+  if(req.user) {
+    res.redirect('/users');
+  } else {
+    res.sendFile(path.join(__dirname, '../public/login.html'));
+  }
+});
+
+// before every request, check whether user is loggied in or not.
+router.get('*', function (req, res, next) { 
+  if(!req.user) {
+    res.redirect('/');
+  }
+  else {
+    next();
+  }
 });
 
 // A dummy route that will take a newly registerd user to the 'login page' and also show "Succes message for registration".
