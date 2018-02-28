@@ -11,7 +11,9 @@ var Categories = require('../models/categories');
 router.get('/', function(req, res, next) {
   Tasks.getTasksOfThisUserSortByDate(req.session.userID, function(err, tasks) {
     if(err) {
-      throw err;
+      req.flash('error_msg', 'Something Went Wrong!!!');
+      console.error(err);
+      return;
     }
 
     // make array of active tasks.
