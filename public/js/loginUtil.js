@@ -151,6 +151,7 @@ function resendAuthToken(event) {
   });
 }
 
+// on focus, remove any Error UI changes.
 function onfocusAction(id) {
   console.log('here', id);
   $('#' + id).removeClass('errBox');
