@@ -195,6 +195,12 @@ function validatePasswordInputs(event) {
 
   if(!$('#oldPassword').length) isOldPassValid = true; // if the change password request comes from forgot password section, the oldPassword field should be hidden and hence its input are valid.
 
+  if(isOldPassValid && $.trim($('#newPassword').val()) === $.trim($('#oldPassword').val())) {
+    $('#newPassword_err').text('New Password must be different from the Old one.').show();
+    $('#newPassword').addClass('errBox');
+    return;
+  }
+
   if(isOldPassValid && isNewPassValid && isNewPass2Valid) {
     sendChangePasswordReq();
   } else {
@@ -286,16 +292,25 @@ function validateFPemailAndSendToken(event) {
     success: function(data) {
       console.log('gotData', data);
       if(data.validationErrors || data.customValidation) {
-        for (var i = 0; i < data.validationErrors.length; i++) {
-          let curr = data.validationErrors[i];
-          $('#' + curr.param).addClass('errBox');
-          $('#' + curr.param + '_err').text('*' + curr.msg).show();
+        if(data.validationErrors) {
+          for (var i = 0; i < data.validationErrors.length; i++) {
+            let curr = data.validationErrors[i];
+            $('#' + curr.param).addClass('errBox');
+            $('#' + curr.param + '_err').text('*' + curr.msg).show();
+          }
         }
-
         if(data.customValidation) {
           let curr = data.customValidation;
-          $('#' + curr.param).addClass('errBox');
-          $('#' + curr.param + '_err').text('*' + curr.msg).show();
+
+          // if the mail counts for this user exceeded, show the user the appropriate message.
+          if(curr.param == 'mailLimitExceeded') {
+            $('#' + curr.param).show();
+            $('#forgotPasswordForm').hide();
+            $('#forgotPasswordForm').hide();  
+          } else {
+            $('#' + curr.param).addClass('errBox');
+            $('#' + curr.param + '_err').text('*' + curr.msg).show();
+          }
         }
 
         $('#forgotPasswordForm').get(0).reset();
@@ -318,7 +333,7 @@ function validateFPemailAndSendToken(event) {
           });
 
           // automatically closes the alert toast - velocity.js
-          $('.myAlert').velocity("slideUp", {delay: 6000, duration: 500});
+          // $('.myAlert').velocity("slideUp", {delay: 6000, duration: 500});
         }
       }
 

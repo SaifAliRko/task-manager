@@ -33,6 +33,16 @@ var UserSchema = new Schema({
   "isAccountVerified": {
     type: Boolean,
     default: false
+  },
+  "mailCount": {
+    "lastMailSend": {
+      type: Date,
+      default: Date.now
+    },
+    "count": {
+      type: Number,
+      default: 0
+    }
   }
 });
 
@@ -75,12 +85,12 @@ module.exports.getUserById = function(Id, callback) {
 // utility to update the Auth Token of a User.
 module.exports.updateAuthToken = function(Id, authToken, callback) {
   User.findByIdAndUpdate(Id, {authToken: authToken}, callback);
-}
+};
 
 // utiltiy method that updates the 'isAccountVerified' field of the User which effictively tells that the 'E-Mail' is now verified.
 module.exports.setAccountVerified = function(Id, callback) {
   User.findByIdAndUpdate(Id, { isAccountVerified: true }, callback);
-}
+};
 
 // utility method that updates the password of a particular User when a change password request is raised.
 module.exports.updatePassword = function(Id, newPassword, callback) {
@@ -96,7 +106,7 @@ module.exports.updatePassword = function(Id, newPassword, callback) {
       User.findByIdAndUpdate(Id, { password: passwordHash }, callback);
     });
   });
-}
+};
 
 // utility that sends mail to a User with mail properties provided as functional arguments.
 module.exports.sendMailToUser = function(subject, text, userMailId, callback) {
@@ -108,17 +118,35 @@ module.exports.sendMailToUser = function(subject, text, userMailId, callback) {
   }, function(err, info) {
     callback(err, info);
   });
-}
+};
 
 // utility that sends 'Template Based Mails' to a User with mail properties provided as functional arguments.
-module.exports.sendMailUsingTemplateToUser = function(subject, userMailId, template, contextObj, callback) {
+module.exports.sendMailUsingTemplateToUser = function(subject, user, template, contextObj, callback) {
   mailObj.sendMail({
     from: config.mailSender,
-    to: userMailId,
+    to: user.email,
     subject: subject,
     template: template,
     context: contextObj
   }, function(err, info) {
-    callback(err, info);
+    updateMailCount(user._id, user.mailCount, function (err_) {
+      callback(err, info);
+    });
   });
-}
+};
+
+var updateMailCount = function (Id, mailCountObj, callback) {
+  let prev = mailCountObj.lastMailSend;
+  let curr = new Date();
+
+  if(prev.getFullYear() === curr.getFullYear() &&
+    prev.getMonth() === curr.getMonth() &&
+    prev.getDate() === curr.getDate()) {
+      mailCountObj.count++;
+  } else {
+    mailCountObj.lastMailSend = new Date();
+    mailCountObj.count = 1;
+  }
+
+  User.findByIdAndUpdate(Id, {mailCount: mailCountObj}, callback);
+};

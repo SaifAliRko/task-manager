@@ -23,16 +23,6 @@ router.get('/', function(req, res, next) {
   }
 });
 
-// before every request, check whether user is loggied in or not.
-router.get('*', function (req, res, next) { 
-  if(!req.user) {
-    res.redirect('/');
-  }
-  else {
-    next();
-  }
-});
-
 // A dummy route that will take a newly registerd user to the 'login page' and also show "Succes message for registration".
 router.get('/newRegistrant', function(req, res, next) {
   res.sendFile(path.join(__dirname, '../public/login.html'));
@@ -98,7 +88,7 @@ router.post('/register', function(req, res, next) {
       }
       
       // Send 'registrantion successful' mail when registration is done.
-      User.sendMailUsingTemplateToUser('Task-Manager Registration Successful', newUser.email, 'registrationComplete', {userFirstName: newUser.firstName}, function(err, info) {
+      User.sendMailUsingTemplateToUser('Task-Manager Registration Successful', newUser, 'registrationComplete', {userFirstName: newUser.firstName}, function(err, info) {
         console.log('inside registration successful template mail', info);
         res.send('');  //if the registrant is new. Don't do anything, code will handle everything.
       });
@@ -123,7 +113,6 @@ passport.use(new localStrategy(
   function(username, password, done) {
     User.getUserByUserName(username, function(err, user) {
       if(err) {
-        req.locals.error_msg = err;
         return done(err);
       }
       if(!user) {
@@ -173,7 +162,7 @@ router.post('/login', passport.authenticate('local', {
         authToken: authToken
       }
       
-      User.sendMailUsingTemplateToUser('Please Authenticate your account!', req.user.email, 'authTokenRelated', mailContextObj, function(err, info) {
+      User.sendMailUsingTemplateToUser('Please Authenticate your account!', req.user, 'authTokenRelated', mailContextObj, function(err, info) {
         console.log('inside account auth', info);
         res.render('authMail', {layout: 'other.handlebars', err: null, resendBtnDisable: false});  //if an older registrant has not yet verified his/her account, take him/her to this page.
       });
@@ -253,6 +242,7 @@ router.post('/changePassword', function(req, res, next) {
           console.error(err);
           return;
         }
+        
         //console.log('inside changePassword2 ---- ', user);
         res.redirect('/passwordChanged');
       });
@@ -287,9 +277,14 @@ router.post('/forgotPasswordPage/sendAuth', function(req, res, next) {
       if(!user) {
         res.send({customValidation: {param: 'user_email', msg: 'The User doesn\'t exist.'}});
       } else {
+        // check whether the mail counts for this user for the day exceeded or not.
+        if(user.mailCount.count >= 5) {
+          res.send({customValidation: {param: 'mailLimitExceeded', msg: 'Exceeded mail send limit, try again in 24 hours.'}});
+          return;
+        }
+
         let authToken = mailObj.generateToken();
 
-        //console.log(user, authToken);
         User.updateAuthToken(user._id, authToken, function(err) {
           if(err) {
             req.flash('error_msg', 'Something Went Wrong!!!');
@@ -305,7 +300,7 @@ router.post('/forgotPasswordPage/sendAuth', function(req, res, next) {
             authToken: authToken
           }
 
-          User.sendMailUsingTemplateToUser('Forgot Login! Authenticate your account.', user.email, 'authTokenRelated', mailContextObj, function(err, info) {
+          User.sendMailUsingTemplateToUser('Forgot Login! Authenticate your account.', user, 'authTokenRelated', mailContextObj, function(err, info) {
             console.log('inside forgot password auth mail send', info);
             res.send({});
           });
@@ -369,11 +364,21 @@ router.get('/resendMail', function(req, res, next) {
     authToken: authToken
   }
 
-  User.sendMailUsingTemplateToUser('Please Authenticate your account!', req.user.email, 'authTokenRelated', mailContextObj, function(err, info) {
+  User.sendMailUsingTemplateToUser('Please Authenticate your account!', req.user, 'authTokenRelated', mailContextObj, function(err, info) {
     console.log('inside account auth - resend token', info);
     res.render('authMail', {layout: 'other.handlebars', err: null, resendBtnDisable: true});  //if an older registrant has not yet verified his/her account, take him/her to this page.
   });
 
+});
+
+// before every request, check whether user is loggied in or not.
+router.get('*', function (req, res, next) { 
+  if(!req.user) {
+    res.redirect('/');
+  }
+  else {
+    next();
+  }
 });
 
 module.exports = router;
