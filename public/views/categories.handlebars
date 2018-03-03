@@ -27,8 +27,8 @@
       {{#each categories}}
         <li class="list-group-item">
           {{category_name}}
-          <span class="float-right"><a class="btn btn-primary edit-category-btn" href="/users/editcategory?id={{_id}}" onclick="showSpinner(); return true;" data-categoryid="{{_id}}" data-toggle="tooltip" title="Edit this Category"><i
-          class="material-icons">mode_edit</i></a> <a class="btn btn-danger del-category-btn" href="#" data-categoryid="{{_id}}" data-toggle="tooltip" title="Delete this Category"><i  class="material-icons">delete</i></a></span>
+          <span class="float-right"><a class="btn btn-primary edit-category-btn" href="/users/editcategory?id={{JWT_Id}}" onclick="showSpinner(); return true;" data-categoryid="{{JWT_Id}}" data-toggle="tooltip" title="Edit this Category"><i
+          class="material-icons">mode_edit</i></a> <a class="btn btn-danger del-category-btn" href="#" data-categoryid="{{JWT_Id}}" data-toggle="tooltip" title="Delete this Category"><i  class="material-icons">delete</i></a></span>
         </li>
       {{/each}}
     </ul>

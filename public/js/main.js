@@ -55,6 +55,18 @@ $(document).ready(function() {
   });
 
   $('.sure-del-category').on('click', deleteThisCategory);
+
+  // add category modal
+  $('#category_name_modal_err').hide();
+
+  $('.open-add-category-modal').on('click', function() {
+    $('#addCategoryModal').fadeIn("fast", function() {
+      $(this).modal('show');
+    });
+  });
+
+  $('body').on('click', '.add-category-modal-btn', addCategoryAndUpdateList);
+
 });
 
 showSpinner = function() {
@@ -87,6 +99,7 @@ function deleteThisTask(event) {
     },
     failure: function(err) {
       console.error(err);
+      window.location.href='/users';
     }
   });
 
@@ -117,6 +130,52 @@ function deleteThisCategory(event) {
   });
 
   event.preventDefault();
+}
+
+// on focus, remove any Error UI changes.
+function onfocusAction(id) {
+  console.log('here', id);
+  $('#' + id).removeClass('errBox');
+  $('#' + id + '_err').hide();
+}
+
+//add Changes to the UI of a particular field to handle error
+function handleErrorUI(id) {
+  $('#' + id).addClass('errBox');
+  $('#' + id + '_err').show();
+}
+
+// add the category via the modal and update the category 'select' list, while on Add Task and Edit Task page.
+function addCategoryAndUpdateList(event) {
+  if($.trim($('#category_name_modal').val()) == "") {
+    handleErrorUI('category_name_modal');
+    return;
+  }
+
+  // hide the modal
+  $('#addCategoryModal').fadeOut('fast', function() {
+    $(this).modal('hide');
+  });
+
+  showSpinner();
+  $.ajax({
+    url: "/users/addThisCategory",
+    contentType: "application/json",
+    type: "POST",
+    data: JSON.stringify({
+      category_name: $('#category_name_modal').val(),
+      isFromModal: true
+    }),
+    success: function() {
+      console.log('category added successfully to db from modal');
+
+      $('#category').append($('<option>', {
+        value: $('#category_name_modal').val(),
+        text: $('#category_name_modal').val()
+      }));
+      hideSpinner();
+    }
+  })
 }
 
 // check if all the field values in the form are valid, then only send a request to the server to add task.

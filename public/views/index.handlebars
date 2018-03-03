@@ -50,13 +50,13 @@
                           </div>
                           <div class="col">
                             <span class="float-right">
-                              <a class="btn btn-success setDone-task-btn" href="/users/setTaskDone?taskid={{this._id}}" onclick="showSpinner(); return true;" data-taskid="{{this._id}}" data-toggle="tooltip" title="Mark Task Done!">
+                              <a class="btn btn-success setDone-task-btn" href="/users/setTaskDone?taskid={{this.JWT_Id}}" onclick="showSpinner(); return true;" data-taskid="{{this.JWT_Id}}" data-toggle="tooltip" title="Mark Task Done!">
                               <i class="material-icons">assignment_turned_in</i>
                               </a> 
-                              <a class="btn btn-primary edit-task-btn" href="/users/editTask?taskid={{this._id}}" onclick="showSpinner(); return true;" data-taskid="{{this._id}}" data-toggle="tooltip" title="Edit this Task">
+                              <a class="btn btn-primary edit-task-btn" href="/users/editTask?taskid={{this.JWT_Id}}" onclick="showSpinner(); return true;" data-taskid="{{this.JWT_Id}}" data-toggle="tooltip" title="Edit this Task">
                                 <i class="material-icons">mode_edit</i>
                               </a> 
-                              <a class="btn btn-danger del-task-btn" href="#" data-taskid="{{this._id}}" data-toggle="tooltip" title="Delete this Task">
+                              <a class="btn btn-danger del-task-btn" href="#" data-taskid="{{this.JWT_Id}}" data-toggle="tooltip" title="Delete this Task">
                                 <i class="material-icons">delete</i>
                               </a>
                             </span>
@@ -97,10 +97,10 @@
                           </div>
                           <div class="col">
                             <span class="float-right">
-                              <a class="btn btn-secondary setActive-task-btn" href="/users/setTaskActive?taskid={{this._id}}" onclick="showSpinner(); return true;" data-taskid="{{this._id}}" data-toggle="tooltip" title="Mark Task Active Again!">
+                              <a class="btn btn-secondary setActive-task-btn" href="/users/setTaskActive?taskid={{this.JWT_Id}}" onclick="showSpinner(); return true;" data-taskid="{{this.JWT_Id}}" data-toggle="tooltip" title="Mark Task Active Again!">
                                 <i class="material-icons">assignment_return</i>
                               </a> 
-                              <a class="btn btn-danger del-task-btn" href="#" data-taskid="{{this._id}}" data-toggle="tooltip" title="Delete this Task">
+                              <a class="btn btn-danger del-task-btn" href="#" data-taskid="{{this.JWT_Id}}" data-toggle="tooltip" title="Delete this Task">
                                 <i class="material-icons">delete</i>
                               </a>
                             </span>

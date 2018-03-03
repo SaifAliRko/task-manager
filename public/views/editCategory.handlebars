@@ -3,7 +3,7 @@
     <h2 class="page-header">Edit Category</h2>
 
     <br>
-    <form id="edit_category" method="POST" action="/users/saveEditedCategory?id={{category._id}}">
+    <form id="edit_category" method="POST" action="/users/saveEditedCategory?id={{category.JWT_Id}}">
       <div class="form-group">
         <label for="category_name" class="font-weight-bold">Category</label>
         <input type="text" name="category_name" id="category_name" class="form-control" placeholder="Category Name" value="{{category.category_name}}" autofocus required onfocus="$(this)[0].setSelectionRange($(this).val().length, $(this).val().length);"/>

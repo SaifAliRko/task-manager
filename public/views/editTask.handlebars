@@ -3,7 +3,7 @@
     <h2 class="page-header" style="text-align: center;">Edit Task</h2>
 
     <br>
-    <form id="edit_task" method="POST" action="/users/saveEditedTask?taskid={{task._id}}">
+    <form id="edit_task" method="POST" action="/users/saveEditedTask?taskid={{task.JWT_Id}}">
       <div class="myKindaForm">
         <div class="form-group">
           <label for="task_name" class="font-weight-bold">Task</label>
@@ -17,7 +17,8 @@
 
         <div class="form-group">
           <label for="category" class="font-weight-bold">Category</label>
-          <select type="text" name="category" id="category" class="form-control" value="{{task.category}}" required>
+          <select type="text" name="category" id="category" class="form-control" style="margin-bottom: 10px; height: 45px;" value="{{task.category}}" required>
+            <option selected disabled value="">Select Category</option>
             {{#each categories}}
               {{#if is_selected}}
                 <option value="{{category_name}}" selected="selected">{{category_name}}</option>
@@ -26,6 +27,8 @@
               {{/if}}
             {{/each}}
           </select>
+
+          <a href="#" class="open-add-category-modal" style="font-size: 16px;">Add Category</a>
         </div>
 
         <div class="form-group">

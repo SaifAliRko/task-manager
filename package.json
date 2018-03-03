@@ -19,6 +19,7 @@
     "express-messages": "^1.0.1",
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
+    "jsonwebtoken": "^8.1.1",
     "moment": "^2.20.1",
     "mongoose": "^4.13.6",
     "nodemailer": "^4.4.2",

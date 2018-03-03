@@ -55,6 +55,32 @@
     </div>
     <!-- delete confirmation Modal ends-->
 
+    <!-- add category Modal starts -->
+    <div class="modal" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="category_name" class="font-weight-bold">Category</label>
+              <input type="text" id="category_name_modal" class="form-control" placeholder="Category Name" required onfocus="onfocusAction('category_name_modal')"/>
+              <span id="category_name_modal_err" class="errMsgSpan float-left" style="margin-top: 0px;">*Enter valid values</span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary add-category-modal-btn">Add Category</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- add category Modal ends -->
+
     <!-- Container Starts -->
     <div class="container">
       <div class="header clearfix">
