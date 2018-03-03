@@ -13,7 +13,7 @@ body {
 
 .myKindaForm {
   overflow-y: scroll;
-  max-height: 500px;
+  max-height: 270px;
 }
 
 .myKindaForm > div {
