@@ -1,3 +1,10 @@
+/** TO DO List:
+**/
+
+/** CHANGE LOGS:
+ * Add router.get('*')
+**/
+
 var router = require('express').Router();
 var path = require('path');
 var passport = require('passport');
@@ -6,6 +13,7 @@ var localStrategy = require('passport-local').Strategy;
 var User = require('../models/users');
 var mailObj = require('../mailUtil');
 
+// the starting route. If the user is logged in, his/her dashboard is shown, Else Login page is rendered.
 router.get('/', function(req, res, next) {
   // if the user is logged in, take him to '/users' route, else open login page.
   if(req.user) {

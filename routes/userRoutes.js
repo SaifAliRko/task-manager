@@ -1,10 +1,22 @@
+/** TO DO List:
+**/
+
+/** CHANGE LOGS:
+ * Added JWT for taskIds and categoryIds
+ * Added 'add category modal' route handlers.
+**/
+
+
 var express = require('express');
 var router = express.Router();
 var path = require('path');
 var moment = require('moment');
+var jwt = require('jsonwebtoken');
 
 var Tasks = require('../models/tasks');
 var Categories = require('../models/categories');
+
+var config = require('../config/config.js');
 
 //var mainRoute = require('./routes');  // routes with '/'
 
@@ -31,6 +43,7 @@ router.get('/', function(req, res, next) {
       task.createdDate_toShow = moment(tasks[i].createdDate).format("MMM Do YYYY");
       task.lastEditedDate_toShow = moment(tasks[i].lastEditedDate).format("MMM Do YYYY");
       task.doneDate_toShow = moment(tasks[i].doneDate).format("MMM Do YYYY");
+      task.JWT_Id = getJWT(task._id);
 
       taskArr.push(task);
       prevDate = Date.parse(task.due_date);
@@ -59,6 +72,7 @@ router.get('/', function(req, res, next) {
       task.createdDate_toShow = moment(tasks[i].createdDate).format("MMM Do YYYY");
       task.lastEditedDate_toShow = moment(tasks[i].lastEditedDate).format("MMM Do YYYY");
       task.doneDate_toShow = moment(tasks[i].doneDate).format("MMM Do YYYY");
+      task.JWT_Id = getJWT(task._id);
       
       doneTaskArr.push(task);
       prevDate = Date.parse(task.due_date);
@@ -74,6 +88,10 @@ router.get('/', function(req, res, next) {
 
     let hasTasks = dateWiseTasks.length | dateWiseTasks_done.length;
     // req.flash can only be accessed once, after that it expires. And it also expires when there is a different request...
+
+    /* console.log('res.locals', res.locals);
+    console.log('req.flash', req.flash('error_msg')); */
+
     if(res.locals.success_msg.toString() == "" && res.locals.error_msg.toString() == "") {
       res.render('index', {hasTasks: hasTasks, dateWiseTasks: dateWiseTasks, dateWiseTasks_done: dateWiseTasks_done, isActiveNavLink_Tasks: true, user: {firstName: req.user.firstName}});
       return;
@@ -84,6 +102,7 @@ router.get('/', function(req, res, next) {
       error: res.locals.error_msg
     }
 
+    console.log('flashMsg', flashMsgObj);
     res.render('index', {hasTasks: hasTasks, dateWiseTasks: dateWiseTasks, dateWiseTasks_done: dateWiseTasks_done, isActiveNavLink_Tasks: true, flashMsgObj: flashMsgObj, user: {firstName: req.user.firstName}});
   });
 });
@@ -98,21 +117,37 @@ router.get('/addTask', function(req, res, next) {
   });
 });
 
+// this method shows the EditTask page with task values pre populated, on click of the 'edit task' button.
 router.get('/editTask', function(req, res, next) {
-  let taskId =  req.query.taskid;
+  let taskId;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    taskId = verifyJWT(req.query.taskid).Id;
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    //console.error('My error', err);
+    res.redirect('/');
+    return;
+  }
+  
   Tasks.getTaskById(taskId, function(err, task) {
     if(err) {
-      throw err;
+      req.flash('error_msg', 'Something Went Wrong!!!');
+      console.error(err);
+      return;
     }
 
     // get all categories for "select category dropdown list"
     Categories.getAllCategoriesOfTheUser(req.session.userID, function(err, categories) {
       if(err) {
-        throw err;
+        req.flash('error_msg', 'Something Went Wrong!!!');
+        console.error(err);
+        return;
       }
       //task.due_date_toShow = task.due_date.toString().split('T')[0];
       task.due_date_toShow = moment(task.due_date).format('YYYY-MM-DD');
-      console.log('taskDueDateTS', task.due_date_toShow);
+      task.JWT_Id = getJWT(task._id);
 
       for (var i = 0; i < categories.length; i++) {
         categories[i].is_selected = (categories[i].category_name == task.category);
@@ -124,9 +159,20 @@ router.get('/editTask', function(req, res, next) {
   });
 });
 
+// this route saves the task that is edited.
 router.post('/saveEditedTask', function(req, res, next) {
-  let taskId =  req.query.taskid;
-  //console.log(req.body, req.query);
+  let taskId;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    taskId = verifyJWT(req.query.taskid).Id;
+    console.log('verify jwt', taskId)
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    console.error(err);
+    return;
+  }
+
   Tasks.updateTaskById(taskId, req.body, {new: true}, function(err, task) {
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
@@ -161,8 +207,21 @@ router.post('/saveTask', function(req, res, next) {
   });
 });
 
+// this route deletes a particular task.
 router.delete('/deleteTask', function(req, res, next) {
-  let taskId = req.query.id;
+  let taskId;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    taskId = verifyJWT(req.query.id).Id;
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    console.error('my error ', err);
+
+    res.send();
+    return;
+  }
+
   Tasks.deleteTaskById(taskId, function(err, task) {
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
@@ -177,7 +236,19 @@ router.delete('/deleteTask', function(req, res, next) {
 
 // this method marks a particular task as 'done' once the done button is clicked.
 router.get('/setTaskDone', function(req, res, next) {
-  let taskId =  req.query.taskid;
+  let taskId;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    taskId = verifyJWT(req.query.taskid).Id;
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    console.error('my error', err);
+
+    res.redirect('/');
+    return;
+  }
+
   Tasks.setTaskDone(taskId, function (err) { 
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
@@ -191,7 +262,19 @@ router.get('/setTaskDone', function(req, res, next) {
 
 // this method re-activates a done task after the 're-activate' button is clicked.
 router.get('/setTaskActive', function(req, res, next) {
-  let taskId =  req.query.taskid;
+  let taskId;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    taskId = verifyJWT(req.query.taskid).Id;
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    console.error(err);
+
+    res.redirect('/');
+    return;
+  }
+
   Tasks.setTaskActive(taskId, function (err) { 
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
@@ -205,6 +288,10 @@ router.get('/setTaskActive', function(req, res, next) {
 
 router.get('/categories', function(req, res, next) {
   Categories.getAllCategoriesOfTheUser(req.session.userID, function(err, categories) {
+
+    for (let i = 0; i < categories.length; i++) {
+      categories[i].JWT_Id = getJWT(categories[i]._id);
+    };
 
     // req.flash can only be accessed once, after that it expires. And it also expires when there is a different request...
     if(res.locals.success_msg.toString() == "" && res.locals.error_msg.toString() == "") {
@@ -222,8 +309,21 @@ router.get('/categories', function(req, res, next) {
 });
 
 router.get('/editcategory', function(req, res, next) {
-  var categoryid = req.query.id;
+  var categoryid;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    categoryid = verifyJWT(req.query.id).Id;
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    console.error(err);
+
+    res.redirect('/users/category');
+    return;
+  }
+
   Categories.getCategoryById(categoryid, function(err, category) {
+    category.JWT_Id = getJWT(category._id);
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
       console.error(err);
@@ -234,7 +334,19 @@ router.get('/editcategory', function(req, res, next) {
 });
 
 router.post('/saveEditedCategory', function(req, res, next) {
-  var categoryid = req.query.id;
+  var categoryid;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    categoryid = verifyJWT(req.query.id).Id;
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    console.error(err);
+
+    res.redirect('/users/categories');
+    return;
+  }
+  
   Categories.updateCategoryById(categoryid, req.body, {new: true}, function(err, category) {
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
@@ -248,7 +360,19 @@ router.post('/saveEditedCategory', function(req, res, next) {
 });
 
 router.delete('/deleteCategory', function(req, res, next) {
-  var categoryid = req.query.id;
+  var categoryid;
+
+  // try catch block to catch exception if JWT Token cannot get decrypted. Try-Catch is used because the function call is chosen to be synchronous and not asynchronous.
+  try {
+    categoryid = verifyJWT(req.query.id).Id;
+  } catch(err) {
+    req.flash('error_msg', 'Something Went Wrong!!!');
+    console.error(err);
+
+    res.send();
+    return;
+  }
+
   Categories.deleteCategoryById(categoryid, function(err) {
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
@@ -271,6 +395,8 @@ router.post('/addThisCategory', function(req, res, next) {
     "owner": req.session.userID
   });
 
+  let isFromModal = req.body.isFromModal;
+  console.log('req', req.body);
   Categories.addNewCategory(category, function(err) {
     if(err) {
       req.flash('error_msg', 'Something Went Wrong!!!');
@@ -279,7 +405,11 @@ router.post('/addThisCategory', function(req, res, next) {
       req.flash('success_msg', 'Category Added Successfully!');
     }
 
-    res.redirect('/users/categories');
+    if(isFromModal) {
+      res.send();
+    } else {
+      res.redirect('/users/categories');
+    }
   })
 });
 
@@ -294,3 +424,14 @@ router.get('/logout', function(req, res, next) {
 });
 
 module.exports = router;
+
+// method that gives the encrypts the Id passed as arguments into a JWT Token.
+function getJWT(Id) {  
+  return jwt.sign({ Id }, config.jwtSecret);
+}
+
+// method that decrypts the Token with the jwtSecret and fetches the actual original value.
+function verifyJWT(token) {
+  //console.log('token', token);
+  return jwt.verify(token, config.jwtSecret);
+}
