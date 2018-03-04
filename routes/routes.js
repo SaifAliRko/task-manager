@@ -278,7 +278,12 @@ router.post('/forgotPasswordPage/sendAuth', function(req, res, next) {
         res.send({customValidation: {param: 'user_email', msg: 'The User doesn\'t exist.'}});
       } else {
         // check whether the mail counts for this user for the day exceeded or not.
-        if(user.mailCount.count >= 5) {
+        let prev = user.mailCount.lastMailSend;
+        let curr = new Date();
+
+        if(prev.getFullYear() === curr.getFullYear() &&
+          prev.getMonth() === curr.getMonth() &&
+          prev.getDate() === curr.getDate() && user.mailCount.count >= 5) {
           res.send({customValidation: {param: 'mailLimitExceeded', msg: 'Exceeded mail send limit, try again in 24 hours.'}});
           return;
         }
