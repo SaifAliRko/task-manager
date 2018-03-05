@@ -376,7 +376,7 @@ router.get('/resendMail', function(req, res, next) {
 
 });
 
-// before every request, check whether user is loggied in or not.
+// before every request, check whether user is logged in or not.
 router.get('*', function (req, res, next) { 
   if(!req.user) {
     res.redirect('/');

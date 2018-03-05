@@ -92,6 +92,11 @@ var userRoutes = require('./routes/userRoutes');
 app.use('/', routes);
 app.use('/users', userRoutes);
 
+// when no such route is found, send a 404 not found message.
+app.get('*', function (req, res, next) {
+  res.send('<div style="text-align: center; margin-top: 30px;"><h2>SORRY NO SUCH URL EXISTS!!!</h2><h2 style="color: grey;">404 NOT FOUND</h2></div>');
+}); 
+
 app.listen(PORT, function() {
   console.log('magic is happening at ' + PORT + '!!!');
 });
