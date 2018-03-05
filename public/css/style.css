@@ -1,12 +1,19 @@
 /* Space out content a bit */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   background: url("../images/too-much-todo.jpg");
   height: 100%;
+  width: 100%;
   background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100%;
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
 }
 
 #spinner {
@@ -14,10 +21,6 @@ body {
   z-index: 9999;
   top: 50%;
   left: 50%;
-}
-
-html {
-  min-height: 100%;
 }
 
 .myKindaForm {
@@ -63,6 +66,16 @@ html {
   text-shadow: 2px -1px 0px white;
   color: #868e96 !important;
 }
+
+/*
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 2;
+}
+*/
 
 .nav-link:hover {
   color: white;
