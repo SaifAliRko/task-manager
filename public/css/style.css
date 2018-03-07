@@ -12,6 +12,8 @@ body {
   width: 100%;
   background-position: center;
   background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
