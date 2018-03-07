@@ -67,16 +67,6 @@ body {
   color: #868e96 !important;
 }
 
-/*
-.footer {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 2;
-}
-*/
-
 .nav-link:hover {
   color: white;
 }
@@ -87,10 +77,12 @@ body {
 }
 
 /* making the user-profile dropdown hover visible*/
+
 .dropdown-item:hover {
   color: white !important;
   background-color: #007bff !important;
 }
+
 
 /* media queries */
 @media screen and (max-width: 990px) {
