@@ -26,7 +26,7 @@
 
     <style>
       .card-body {
-        box-shadow: 4px 3px 11px 2px #b80ca9;
+        box-shadow: 0px 5px 10px 0px #ddd;
       }
     </style>
 
@@ -50,7 +50,7 @@
       <!-- Success/Failure Toast ends -->
 
       <!-- Login Card starts -->
-      <div class="card mx-auto text-center card-container signin" style="width: 25rem;">
+      <div class="card mx-auto text-center card-container signin" style="width: 25rem; background: white; opacity: 0.8;">
         <div class="card-body">
 
           <img class="rounded mx-auto d-block" style="height: 150px; width: 150px; margin-top: 10px;" src="../images/profile.png" alt="Card image cap">
@@ -62,7 +62,7 @@
             <input type="password" class="form-control" name="password" id="password" placeholder="Password" required onfocus="onfocusAction('password'); return false;">
             <span id="password_err" class="errMsgSpan float-left" style="display: none;">*Enter valid values</span>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit" id="btn-signIn" onclick="return validateSignIn();">Sign in</button>
+            <button class="btn btn-lg btn-outline-primary btn-block" type="submit" id="btn-signIn" onclick="return validateSignIn();" style="margin-top: 20px;">Sign in</button>
             <br>
             <button class="btn btn-link float-left" id="btn-forgotPassword" onclick="return false;">Forgot Password?</button>
             <button class="btn btn-link float-right" id="btn-registerNew" onclick="return false;">Register New</button>
@@ -74,7 +74,7 @@
       <!-- Login Card Ends -->
       
       <!-- Sign Up Card Starts -->
-      <div class="card mx-auto text-center card-container signup" style="width: 25rem; display: none;">
+      <div class="card mx-auto text-center card-container signup" style="width: 25rem; display: none; opacity: 0.8; background: white;">
         <div class="card-body">
 
           <img class="rounded mx-auto d-block" style="height: 150px; width: 150px; margin-top: 10px;" src="https://cdn1.iconfinder.com/data/icons/mix-color-4/502/Untitled-1-512.png" alt="Card image cap">
@@ -96,7 +96,7 @@
             <span id="newuser_confirm_password_err" class="errMsgSpan float-left" style="margin-top: -12px;"></span>
 
 
-            <button class="btn btn-lg btn-primary btn-block" id="btn-signUp">Sign up</button>
+            <button class="btn btn-lg btn-outline-primary btn-block" id="btn-signUp" style="margin-top: 20px;">Sign up</button>
             <br>
             <button class="btn btn-link" id="btn-registered">Already a user?</button>
 
