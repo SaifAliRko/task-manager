@@ -135,6 +135,20 @@ module.exports.sendMailUsingTemplateToUser = function(subject, user, template, c
   });
 };
 
+// utility that sends 'Template Based Mails' to the OWNER about informing him that a New User has registered.
+module.exports.sendNewRegistrationInfoToOwner = function(subject, template, contextObj, callback) {
+  mailObj.sendMail({
+    from: config.mailSender,
+    to: config.realOwner,
+    subject: subject,
+    template: template,
+    context: contextObj
+  }, function(err, info) {
+    callback(err, info);
+  });
+};
+
+// update the mail count of a particular user for the day.
 var updateMailCount = function (Id, mailCountObj, callback) {
   let prev = mailCountObj.lastMailSend;
   let curr = new Date();

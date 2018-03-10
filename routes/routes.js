@@ -16,7 +16,7 @@ var mailObj = require('../mailUtil');
 // the starting route. If the user is logged in, his/her dashboard is shown, Else Login page is rendered.
 router.get('/', function(req, res, next) {
   // if the user is logged in, take him to '/users' route, else open login page.
-  if(req.user) {
+  if(req.user && req.user.isVerifiedUser) {
     res.redirect('/users');
   } else {
     res.sendFile(path.join(__dirname, '../public/login.html'));
@@ -151,7 +151,22 @@ router.post('/login', passport.authenticate('local', {
       res.redirect('/users');
       //if the user has not yet verified his/her account, mail Auth Token and take him/her to this page.
     } else {
-      //get auth token
+      // check whether the mail counts for this user for the day exceeded or not.
+      let prev = req.user.mailCount.lastMailSend;
+      let curr = new Date();
+
+      if(prev.getFullYear() === curr.getFullYear() &&
+        prev.getMonth() === curr.getMonth() &&
+        prev.getDate() === curr.getDate() && req.user.mailCount.count >= 5) {
+        
+        // if in the User Auth section, the user has exhausted the mail send limits, don't send the user any more mails, and show him the error.
+        res.render('authMail', {layout: 'other.handlebars', exceededMailSendLimit: true, err: null, resendBtnDisable: true});
+
+        return;
+      }
+      
+      // If there are still mails the system can send the User, proceed with that.
+      // get auth token
       let authToken = req.user.authToken;
 
       let mailText = 'Hi ' + req.user.firstName + ', Thanks for registering with us. Please use the authentication token to verify your account.';
@@ -164,7 +179,7 @@ router.post('/login', passport.authenticate('local', {
       
       User.sendMailUsingTemplateToUser('Please Authenticate your account!', req.user, 'authTokenRelated', mailContextObj, function(err, info) {
         console.log('inside account auth', info);
-        res.render('authMail', {layout: 'other.handlebars', err: null, resendBtnDisable: false});  //if an older registrant has not yet verified his/her account, take him/her to this page.
+        res.render('authMail', {layout: 'other.handlebars', err: null, resendBtnDisable: null});  //if an older registrant has not yet verified his/her account, take him/her to this page.
       });
     }
   }
@@ -174,6 +189,11 @@ router.post('/login', passport.authenticate('local', {
 router.get('/logout', function(req, res, next) {
   req.logout();
   req.session.destroy();
+  res.redirect('/');
+});
+
+// when the user is in login route and refreshes the page.
+router.get('/login', function (req, res, next) {
   res.redirect('/');
 });
 
@@ -347,6 +367,22 @@ router.post('/validateAuthToken', function(req, res, next) {
         res.locals.error_msg = err.msg;
         console.error(err);
       } else {
+        
+
+        let contextObj = {
+          userFirstName: req.user.firstName,
+          userLastName: req.user.lastName,
+          userEmail: req.user.email
+        }
+
+        // Send 'New User Registrantion' mail when registration is done to the OWNER.
+        User.sendNewRegistrationInfoToOwner('Task-Manager New User Registered!', 'notifyOwnerAboutNewReg', contextObj, function(err, info) {
+          if(err) {
+            console.error(err);
+          } else {
+            console.log('mail sent to owner!!!', info);
+          }
+        });
         res.redirect('/users');
       }
     });
