@@ -1,0 +1,41 @@
+<!-- This mail template is used to notify the owner that a New User has registered. -->
+<!DOCTYPE>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Copse" rel="stylesheet">
+    <style>
+      .myFont {
+        font-family: 'Copse', sans-serif, serif;
+      }
+      .text-center {
+        text-align: center !important;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div style="background: #6c0054;">
+      <div class="text-center" style="background: white; border: 5px solid #6c0054; border-radius: 20px;">
+        <p class="myFont text-center" style="font-size: 30px; font-weight: bold; margin-top: 20px;
+        padding-top: 10px; color: #6c0054;">New User Registered</p>
+      </div>
+      <div class="myFont text-center">
+        <h2 style="color: white; font-size: 30px; margin: 30px 30px;">Hi Owner. {{userFirstName}} has registered succesfully to the Task-Manager App.</h2>
+
+        <div style="color: white; font-size: 30px; margin: 30px 30px;">
+          <p>Extra Details: </p>
+          <p>Name: <b>{{userFirstName}} {{userLastName}}</b></p>
+          <p>Email: <b>{{userEmail}}</b></p>
+        </div>  
+      </div>
+      <div class="text-center" style="background: white; border: 5px solid #6c0054; border-radius: 20px; margin-top: 30px;">
+        <p class="myFont" style="font-size: 15px; font-weight: bold; color: #6c0054;">&copy; Made With &hearts; by stillNovice</p>
+      </div>
+    </div>
+
+  </body>
+
+</html>
